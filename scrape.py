@@ -1,17 +1,25 @@
-from cgitb import text
+
 from bs4 import BeautifulSoup 
 import requests
 from csv import writer
+from datetime import datetime
+from Datadb import insertData,createConnection,createTable
+
+#create connection to DB
+#create Table Data
+# con = createConnection()
+# con = createTable(con)
 
 url = "https://www.theverge.com/"
 page = requests.get(url)
 
 soup = BeautifulSoup(page.content, 'html.parser')
 lists = soup.find_all('div', {'class':'c-compact-river__entry'}) #c-entry-box--compact__body
-from datetime import datetime
-dates = datetime.now().strftime('%d:%m:%Y')
 
-with open('verge.csv','w',encoding='utf8',newline='') as f:
+dates = datetime.now().strftime('%d%m%Y')
+Name = dates + "_verge.csv"
+
+with open(Name,'w',encoding='utf8',newline='') as f:
     thewriter = writer(f)
     header = ['id', 'URL','headline', 'author', 'date']
     thewriter.writerow(header)
@@ -31,7 +39,12 @@ with open('verge.csv','w',encoding='utf8',newline='') as f:
         except:
             date = " "
         i += 1
+        
         info = [id,article_link,heading,author,date]
+        con = createConnection()
+       
+        data = insertData(info,con)
+        
         thewriter.writerow(info)
 
     
