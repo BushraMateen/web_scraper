@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 import requests
 from csv import writer
 from datetime import datetime
-from Datadb import insertData,createConnection,createTable
+from Datadb import insertData,createConnection,createTable,getData
 
 #create connection to DB
 #create Table Data
@@ -44,6 +44,8 @@ with open(Name,'w',encoding='utf8',newline='') as f:
         con = createConnection()
        
         data = insertData(info,con)
+
+        getData(id,con)
         
         thewriter.writerow(info)
 
